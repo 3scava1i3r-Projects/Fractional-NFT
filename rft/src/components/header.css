@@ -1,0 +1,50 @@
+* {
+    margin: 0;
+}
+
+.header_navigation {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.h {
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+
+.header_logo {
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+    object-fit: contain;
+}
+
+.header {
+    background-color: #221e1e;
+    display: flex;
+    align-items: center;
+}
+
+
+.header_link {
+    text-decoration: none;
+    color: white;
+}
+
+#headbtn {
+    margin-left: 5px;
+    margin-bottom: 5px;
+    color: white;
+}
+
+#Addr {
+    margin-left: 10px;
+    color: white;
+}
+
+#nav_right {
+    float: right;
+}
