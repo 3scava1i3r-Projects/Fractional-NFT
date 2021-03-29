@@ -48,3 +48,13 @@
 #nav_right {
     float: right;
 }
+
+.address {
+    align-items: flex-end;
+    flex-direction: row;
+    float:right;
+    color: white;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
+}

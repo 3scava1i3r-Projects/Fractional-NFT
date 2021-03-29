@@ -1,0 +1,47 @@
+/* Create js */
+
+
+#hh {
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding-left: 200px;
+    padding-right: 200px;
+
+    
+}
+
+#first-form {
+    margin: 10px;
+}
+
+
+#buttons {
+    margin-top: 10px;
+}
+
+
+#ll {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+/*  Market js         */
+#gg {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px;
+    padding-right: 250px;
+    padding-left: 250px;
+    
+}
+
+

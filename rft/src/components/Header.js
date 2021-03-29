@@ -1,10 +1,35 @@
-import React from 'react'
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { ethers } from "ethers";
+
+
 
 import './header.css';
+import { getAddress } from 'ethers/lib/utils';
+
+
 
 
 export default function Header() {
+
+  let provider;
+
+  const [address, setaddress] = useState();
+
+  window.ethereum
+    .enable()
+    .then((provider = new ethers.providers.Web3Provider(window.ethereum)));
+  const signer = provider.getSigner();
+
+
+
+  const getAd = async() => {
+    const l = await signer.getAddress();
+    setaddress(l);
+  };
+  getAd();
+  
+  
     return (
       <nav className="header">
         <Link to="/">
@@ -28,8 +53,15 @@ export default function Header() {
             </div>
           </Link>
 
-        
         </div>
+
+        <div className="address">
+          <span>
+            
+            {address}
+          </span>
+        </div>
+
       </nav>
     );
 }
