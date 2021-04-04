@@ -9,7 +9,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { checkProperties } from "ethers/lib/utils";
 import { makeStyles } from "@material-ui/core/styles";
-
+import Chip from "@material-ui/core/Chip";
 
 
 import NFTselect from '../components/nftselect.js';
@@ -41,6 +41,11 @@ let provider;
 const classes = useStyles();
 
 const [ data, setdata] = useState([]);
+const [Select , setSelect ] = useState({});
+const [T ,setT] = useState();
+
+const [contractadd, setcontractadd] = useState();
+const [tkid , settkid] = useState();
 
 
 const [Name , setName] = useState();
@@ -83,6 +88,24 @@ async function connectmetamask() {
 
 }
 
+
+const Sel = (img) => {
+  setSelect(img);
+};
+
+const contracttype = (ct) => {
+  setT(ct);
+};
+
+const tokenid = (tk) => {
+  settkid(tk);
+};
+
+const cadd = (conadd) => {
+  setcontractadd(conadd);
+};
+
+
 const DeployCC = async() => {
 
   
@@ -90,13 +113,14 @@ const DeployCC = async() => {
   const address = await signer.getAddress();
 
 
-  if (data[0].asset_contract.asset_contract_type !== "non-fungible")
+  /* if (data[0].asset_contract.asset_contract_type !== "non-fungible")
   {
     console.log("Need a non-fungible token man!")
-  }
+  } */
 
 
-
+  console.log(contractadd);
+  console.log(tkid)
 
   const SWFcontract = new ethers.Contract(
     "0x8D6889c94DeE6BFF422EF191Fa404f461667D2c4",
@@ -108,8 +132,8 @@ const DeployCC = async() => {
   const receipt = await SWFSigner.mintWallet(
     "0x496FA5e4095a0dBf120b644DFCcd698607ADaD9F",
     address,
-    "Tokenized NFT", // name_
-    "TNFT",
+    Name, // name_
+    Sym,
     address
   );
 
@@ -143,7 +167,7 @@ const DeployCC = async() => {
   
 
   const ApproveNFT = new ethers.Contract(
-    data[0].asset_contract.address,
+    contractadd,
     Approve,
     provider
   );
@@ -179,10 +203,12 @@ const DeployCC = async() => {
 
   const BTSigner = BatchTransfer.connect(signer);
 
+  
+
   const Transfer = await BTSigner.batchTransferERC721(
     [SWinstance.address], //   SWR.logs[1].address.toString()
-    [data[0].asset_contract.address.toString()],
-    [data[0].token_id.toString()]
+    [contractadd.toString()],
+    [tkid.toString()]
   );
 
   const BTR = await provider.waitForTransaction(Transfer.hash);
@@ -202,16 +228,16 @@ const DeployCC = async() => {
   const CSSigner = CrowdSale.connect(signer);
 
 
-  const CPR = await CSSigner.CURVE_PREMINT_RESERVE();
+  /* const CPR = await CSSigner.CURVE_PREMINT_RESERVE(); */
 
   const SaleStart = await CSSigner.setup(
     SWinstance.address,
     address,
-    ethers.utils.parseEther("0.0001").toString(),
+    ethers.utils.parseEther(Ppf).toString(),
     3600,
-    ethers.utils.parseEther("20").toString(),
+    ethers.utils.parseEther(Nof).toString(),
     [
-      [address, ethers.utils.parseEther("8").toString()],
+      [address, ethers.utils.parseEther(Afs).toString()],
     ],
     { from: address }
   );
@@ -229,43 +255,11 @@ const DeployCC = async() => {
 }
 
 
-const AppTrNFT = async() => {
 
 
-  const address = await signer.getAddress();
 
-  const CrowdSale = new ethers.Contract(
-    "0xFC2761AaD91bEd9950Fe41c9a9f81b06D32C152d",
-    CS.abi,
-    provider
-  );
 
-  const CSSigner = CrowdSale.connect(signer);
 
-  const CPR = await CSSigner.CURVE_PREMINT_RESERVE();
-  
-
-  const SaleStart = await CSSigner.setup(
-    "0xee13ff6088d4cf499519cd5ec580b5f5c2ab7c4f",
-    address,
-    ethers.utils.parseEther("0.0001").toString(),
-    3600,
-    ethers.utils.parseEther("20").toString(),
-    [
-      [address, ethers.utils.parseEther("8").toString()],
-      [
-        "0x55590DcD461Ce79eB2280Cd1446932b46112AFc9",
-        ethers.utils.parseEther("12").toString(),
-      ],
-    ],
-    { from: address }
-  );
-
-  console.log(SaleStart);
-  console.log("Sale Started!");
-  
-
-}
 
     return (
       <div>
@@ -276,7 +270,13 @@ const AppTrNFT = async() => {
             {data.map((data, index) => (
               <>
                 <div>
-                  <NFTselect data={data} />
+                  <NFTselect
+                    data={data}
+                    Choose={Sel}
+                    type={contracttype}
+                    contractadd={cadd}
+                    tkid={tokenid}
+                  />
                 </div>
               </>
             ))}
@@ -362,47 +362,47 @@ const AppTrNFT = async() => {
                 Deploy Custody Contract
               </Button>
             </div>
-            <div id="buttons">
-              <Button variant="contained" color="primary" onClick={AppTrNFT}>
+            {/* <div id="buttons">
+              <Button variant="contained" color="primary">
                 Check Preview
               </Button>
-            </div>
-            
-            <div id="ll">
-              <Card className={classes.root}>
-                <CardActionArea>
-                  <CardMedia
-                    className={classes.media}
-                    image={data.image_url}
-                    title="Contemplative Reptile"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      component="p"
-                    >
-                      {data.id}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-                <CardActions>
-                  <Button size="medium" color="primary" onClick>
-                    Choose
-                  </Button>
-                  <Button
-                    size="medium"
-                    color="primary"
-                    href={data.permalink}
-                  >
-                    Learn More
-                  </Button>
-                </CardActions>
-              </Card>
-            </div>
+            </div> */}
+
+            {T !== "non-fungible" ? (
+              <h1>Not a Non fungible token</h1>
+            ) : (
+              <div id="ll">
+                <Card className={classes.root}>
+                  <CardActionArea>
+                    <CardMedia
+                      className={classes.media}
+                      image={Select}
+                      title={Name}
+                    />
+                    <CardContent>
+                      {/* Name */}
+                      <Typography gutterBottom variant="h6" component="h4">
+                        {Name}
+                      </Typography>
+                      {/*Symbol */}
+                      <Chip label={Sym} />
+                      {/* price */}
+                      <Typography gutterBottom variant="h7" component="h5">
+                        {Nof * Ppf}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                  <CardActions>
+                    <Button size="small" color="primary">
+                      Buy
+                    </Button>
+                    <Button size="small" color="primary" href={data.permalink}>
+                      Learn More
+                    </Button>
+                  </CardActions>
+                </Card>
+              </div>
+            )}
           </div>
         </div>
       </div>

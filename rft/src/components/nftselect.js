@@ -24,12 +24,12 @@ const useStyles = makeStyles({
 });
 
 
-const Choose = async() => {
 
-}
 
 
 export default function NFTselect(props) {
+
+  
 
     const classes = useStyles();
     return (
@@ -39,7 +39,7 @@ export default function NFTselect(props) {
             <CardMedia
               className={classes.media}
               image={props.data.image_url}
-              title="Contemplative Reptile"
+              title={props.data.asset_contract.name}
             />
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
@@ -51,7 +51,11 @@ export default function NFTselect(props) {
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <Button size="medium" color="primary" onClick={Choose}>
+            <Button size="medium" color="primary" onClick={() => {props.Choose(props.data.image_url);
+             props.type(props.data.asset_contract.asset_contract_type);
+             props.contractadd(props.data.asset_contract.address);
+             props.tkid(props.data.token_id);
+             }}>
               Choose
             </Button>
             <Button size="medium" color="primary" href={props.data.permalink}>
