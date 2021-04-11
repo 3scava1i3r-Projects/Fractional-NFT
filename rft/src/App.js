@@ -5,11 +5,10 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 
 import Header from './components/Header';
-
 import Home from './screens/Home';
 import Create from './screens/Create';
 import Market from './screens/Market';
-
+import NFTsaleScreen from './components/NFTsaleScreen';
 
 
 function App() {
@@ -21,11 +20,16 @@ function App() {
             <Header />
             <Market />
           </Route>
+
           <Route path="/create">
             <Header />
             <Create />
           </Route>
-          <Route path="/">
+          <Route path="/:id" exact >
+            <Header />
+            <NFTsaleScreen />
+          </Route>
+          <Route path="/" exact>
             <Header />
             <Home />
           </Route>

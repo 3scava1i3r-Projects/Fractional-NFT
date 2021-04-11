@@ -1,0 +1,1 @@
+just making a smart contract to prove my poc of having flashloans using fractional nft

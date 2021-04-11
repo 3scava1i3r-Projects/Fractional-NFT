@@ -20,6 +20,8 @@ const BT = require('../abi/BatchTransferHelper.json');
 const Approve = require('../abi/Approve.json');
 const CS = require('../abi/FixedPriceSaleModule.json');
 const SW = require('../abi/ShardedWallet.json');
+const BDM = require('../abi/BasicDistributionModule.json');
+const Gov = require('../abi/Governance.json');
 
 
 
@@ -54,6 +56,7 @@ const [Desc, setDesc] = useState();
 const [Nof, setNof] = useState();
 const [Afs, setAfs] = useState();
 const [Ppf, setPpf] = useState();
+const [Deadline, setDeadline] = useState();
 
 
   window.ethereum
@@ -248,14 +251,128 @@ const DeployCC = async() => {
 
   console.log("Sale Started!");
 
-  
 
-  
-  
 }
 
 
+const SelfIssued = async() => {
 
+  const address = await signer.getAddress();
+
+  const SWFcontract = new ethers.Contract(
+    "0x8D6889c94DeE6BFF422EF191Fa404f461667D2c4",
+    SWFabi.abi,
+    provider
+  );
+  const SWFSigner = SWFcontract.connect(signer);
+
+  const receipt = await SWFSigner.mintWallet(
+    "0x496FA5e4095a0dBf120b644DFCcd698607ADaD9F",
+    address,
+    Name, // name_
+    Sym,
+    address
+  );
+
+
+  const SWR = await provider.waitForTransaction(receipt.hash);
+  console.log(SWR.logs[1].address.toString());
+
+
+
+  const SWinstance = new ethers.Contract(SWR.logs[1].address, SW.abi, provider);
+
+  console.log(SWinstance);
+
+
+  console.log("Sharded wallet made");
+  
+
+  const ApproveNFT = new ethers.Contract(
+    contractadd,
+    Approve,
+    provider
+  );
+
+  const ApproveNFTSigner = ApproveNFT.connect(signer);
+  const AppReceipt = await ApproveNFTSigner.setApprovalForAll(
+    "0xFD9Be68b7B88f82a19Ea74EDA72F4009dd96360e",
+    true
+  );
+
+  const Appr = await provider.waitForTransaction(AppReceipt.hash);
+  console.log(Appr);
+
+
+  console.log("Approval done!")
+
+
+  const BatchTransfer = new ethers.Contract(
+    "0xFD9Be68b7B88f82a19Ea74EDA72F4009dd96360e",
+    BT.abi,
+    provider
+  );
+
+  const BTSigner = BatchTransfer.connect(signer);
+
+
+  const Transfer = await BTSigner.batchTransferERC721(
+    [SWinstance.address], //   SWR.logs[1].address.toString()
+    [contractadd.toString()],
+    [tkid.toString()]
+  );
+
+  const BTR = await provider.waitForTransaction(Transfer.hash);
+  console.log(BTR);
+
+  console.log("NFT Transfer done!");
+
+  /*  Governance  */
+
+  const governance = new ethers.Contract(
+    "0x496FA5e4095a0dBf120b644DFCcd698607ADaD9F",
+    Gov.abi,
+    provider
+  );
+
+  console.log(governance);
+
+  const govSigner = governance.connect(signer);
+
+  const govadd = await govSigner.getNiftexWallet();
+  console.log(govadd);
+
+
+
+  /*     self issue     */
+  const Self = new ethers.Contract(
+    "0xa48f413dddc05bfd8a2ab5d4985077998f8f5ae6",
+    BDM.abi,
+    provider
+  );
+
+  const BDMsigner = Self.connect(signer);
+    let mainone = ((99 * Nof) / 100).toString();
+    let otherone = (Nof / 100).toString();
+  const Selfsale = await BDMsigner.setup(
+    SWinstance.address,
+    [
+      [ address , (ethers.utils.parseEther(mainone).toString())],
+      [govadd , (ethers.utils.parseEther(otherone).toString())]
+    ],{from: address}
+  );
+
+
+  const BDR = await provider.waitForTransaction(Selfsale.hash);
+  console.log(BDR);
+
+  console.log("Self issued let's go!");
+
+
+  /* 0xa48f413dddc05bfd8a2ab5d4985077998f8f5ae6 */
+
+
+}
 
 
 
@@ -356,17 +473,29 @@ const DeployCC = async() => {
                 }}
               />
             </div>
+            <div id="first-form">
+              <TextField
+                id="outlined-basic"
+                label="Deadline(in seconds)"
+                variant="outlined"
+                type="number"
+                onChange={(e) => {
+                  setDeadline(e.target.value);
+                  console.log(Deadline);
+                }}
+              />
+            </div>
 
             <div id="buttons">
               <Button variant="contained" color="primary" onClick={DeployCC}>
-                Deploy Custody Contract
+                Deploy Custody Contract(FPS)
               </Button>
             </div>
-            {/* <div id="buttons">
-              <Button variant="contained" color="primary">
-                Check Preview
+            <div id="buttons">
+              <Button variant="contained" color="primary" onClick={SelfIssued}>
+                Deploy Self issued 
               </Button>
-            </div> */}
+            </div>
 
             {T !== "non-fungible" ? (
               <h1>Not a Non fungible token</h1>
