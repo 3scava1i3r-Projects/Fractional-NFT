@@ -1,7 +1,7 @@
 import React, { useState , useEffect } from 'react'
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { Button, Chip } from "@material-ui/core";
+import { Button, Chip, TextField } from "@material-ui/core";
 import { ethers } from "ethers";
 
 import './header.css';
@@ -203,7 +203,18 @@ export default function NFTsaleScreen() {
           </Button> */}
         </div>
         <div>
-          <Button variant="contained" color="primary" onClick={buy}>
+          <TextField
+            id="outlined-basic"
+            label="Amount for Self"
+            variant="outlined"
+            type="number"
+            onChange={(e) => {
+              
+            }}
+          />
+        </div>
+        <div>
+          <Button id="btn" variant="contained" color="primary" onClick={buy}>
             Buy
           </Button>
         </div>

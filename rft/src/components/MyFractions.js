@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
   root: {
     width: "100%",
     maxWidth: 360,
-    backgroundColor: "#26443e",
+    backgroundColor: "#888f99",
   },
 }));
 
