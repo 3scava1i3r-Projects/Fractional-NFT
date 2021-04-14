@@ -17,6 +17,7 @@ export default function NFTsaleScreen() {
     let location = useLocation();
     const [image , setimage] = useState();
     const [finaltime , setfinaltime] = useState();
+    const [buyamt, setbuyamt] = useState();
 
 
     window.ethereum
@@ -99,6 +100,7 @@ export default function NFTsaleScreen() {
           }
         )
         .then((res) => {
+          
           console.log(res.data.data.shardedWallet.crowdsales[0].deadline);
 
           /* setdeadline(res.data.data.shardedWallet.crowdsales[0].deadline); */
@@ -147,6 +149,8 @@ export default function NFTsaleScreen() {
         setfinaltime()
       }
     }, [])
+
+
     const load = () => {
       
 
@@ -170,6 +174,7 @@ export default function NFTsaleScreen() {
       const BuyStart = await CSSigner.buy(
           location.state,
           address,
+          {from:address , value : ethers.utils.parseEther(buyamt).toString()}
         );
     const B = await provider.waitForTransaction(BuyStart.hash);
     console.log(B);
@@ -180,6 +185,7 @@ export default function NFTsaleScreen() {
     }
         
     console.log(location);
+    
     return (
       <>
         <div>
@@ -205,11 +211,13 @@ export default function NFTsaleScreen() {
         <div>
           <TextField
             id="outlined-basic"
-            label="Amount for Self"
+            label="Buying amount"
             variant="outlined"
             type="number"
             onChange={(e) => {
-              
+
+
+              setbuyamt(e)
             }}
           />
         </div>
