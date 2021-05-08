@@ -24,7 +24,6 @@ export default function Home() {
   const signer = provider.getSigner();
   signer.getAddress().then((add) => setaddress(add.toLowerCase()));
 
-
   const GetFractions = () => {
     axios
       .post("https://api.thegraph.com/subgraphs/name/jmahhh/niftex-v2-custody", {
@@ -63,21 +62,26 @@ export default function Home() {
   return (
     <div>
       <div>
-        <h1>My Fractions</h1>
+        <h1 style={{ color: "white", margin: 25 }}>My Fractions</h1>
       </div>
       <div>
         {dashboard.map((sharditem, index) => (
           <>
-            <div id="shbal">              
-              <MyFractions shard={sharditem} prov = {provider} add={address}/>
+            <div id="shbal">
+              <MyFractions shard={sharditem} prov={provider} add={address} />
             </div>
           </>
         ))}
       </div>
 
       <div>
-        <Button variant="contained" color="primary" onClick={GetFractions}>
-          Let's gooooooo
+        <Button
+          style={{ margin: "15px", backgroundColor: "#903749" ,color:"white" }}
+          variant="contained"
+          
+          onClick={GetFractions}
+        >
+          check my balance
         </Button>
       </div>
     </div>

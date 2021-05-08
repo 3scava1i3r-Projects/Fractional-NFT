@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ethers } from "ethers";
-
-
+import { ethers }  from "ethers";
 
 import './header.css';
-import { getAddress } from 'ethers/lib/utils';
-
-
 
 
 export default function Header() {

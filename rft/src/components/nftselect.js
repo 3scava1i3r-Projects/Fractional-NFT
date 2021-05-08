@@ -1,4 +1,3 @@
-import { checkProperties } from 'ethers/lib/utils'
 import React from 'react'
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -14,17 +13,16 @@ import Typography from "@material-ui/core/Typography";
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
-    margin:5
+    margin: 5,
+    borderRadius: "20px",
+    backgroundColor: "#4f4d4d",
+    color: "white",
   },
   media: {
     height: 200,
     width: 245,
-    
   },
 });
-
-
-
 
 
 export default function NFTselect(props) {
@@ -42,23 +40,44 @@ export default function NFTselect(props) {
               title={props.data.asset_contract.name}
             />
             <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="h2"
+                style={{ color: "white" }}
+              >
                 {props.data.asset_contract.name}
               </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="p"
+                style={{ color: "white" }}
+              >
                 {props.data.id}
               </Typography>
             </CardContent>
           </CardActionArea>
           <CardActions>
-            <Button size="medium" color="primary" onClick={() => {props.Choose(props.data.image_url);
-             props.type(props.data.asset_contract.asset_contract_type);
-             props.contractadd(props.data.asset_contract.address);
-             props.tkid(props.data.token_id);
-             }}>
+            <Button
+              style={{ color: "white" }}
+              size="medium"
+              color="primary"
+              onClick={() => {
+                props.Choose(props.data.image_url);
+                props.type(props.data.asset_contract.asset_contract_type);
+                props.contractadd(props.data.asset_contract.address);
+                props.tkid(props.data.token_id);
+              }}
+            >
               Choose
             </Button>
-            <Button size="medium" color="primary" href={props.data.permalink}>
+            <Button
+              style={{ color: "white" }}
+              size="medium"
+              color="primary"
+              href={props.data.permalink}
+            >
               Learn More
             </Button>
           </CardActions>

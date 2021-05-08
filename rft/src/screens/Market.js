@@ -1,15 +1,16 @@
-import React, { useState , useEffect } from "react";
+import React, { useState , useEffect  } from "react";
 import axios from "axios";
 
 import MarketCard from "../components/MarketCard";
 import "./Screens.css";
-import { Button } from "@material-ui/core";
+
+
 
 
 let g = new Array();
 
 export default function Market() {
-  const [d, setd] = useState([]);
+
   const [l, setl] = useState([]);
   
 
@@ -61,8 +62,7 @@ export default function Market() {
       )
       .then((res) => {
         const a = res.data.data.tokens;
-        
-        setd(a);
+               
 
         a.map((listitem) => {
 
@@ -118,23 +118,25 @@ export default function Market() {
             
         });
         setl(g);
-        g = [];
         
+        g = [];
+
       })
       .catch((err) => console.error(err));
 
-      
-  
   }, [])
 
-
+console.log(l);
 
   return (
     <>
+      <div>
+        <h1 style={{ color: "white", margin: 25 }}>Market Place</h1>
+      </div>
       <div id="gg">
-        {l.map(( l ,index) => (
+        {l.map((h, index) => (
           <div>
-            <MarketCard l={l}/>
+            <MarketCard l={h} />
           </div>
         ))}
       </div>

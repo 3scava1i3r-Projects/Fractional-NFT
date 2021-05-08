@@ -51,7 +51,6 @@
 #shbal {
     display: flex;
     flex-direction: row;
-    margin: 20px;
     align-items: center;
     justify-content: center;
 }
