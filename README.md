@@ -21,3 +21,4 @@ I had to pivot from 2 ideas and made this in the last 2.5 weeks, I am still work
 
 After that i started working on Fractional NFT Bazaar and just a small problem that i still have is throttling of opensea rinkeby api, that hinders my ability to show images
  
+#### Video link is here - https://www.youtube.com/watch?v=iRMN5N2b2Bc
