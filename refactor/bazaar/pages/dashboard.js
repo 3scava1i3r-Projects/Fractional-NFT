@@ -24,7 +24,6 @@ function dashboard() {
   const { disconnect } = useDisconnect()
 
   
-  
   useEffect(() => {
 
     if(account != null)
@@ -76,7 +75,7 @@ function dashboard() {
             {ensName ? `${ensName} (${account.address})` : account?.address}
           </div>
           <div>Connected to {account.connector.name}</div>
-          <button onClick={disconnect}>Disconnect</button>
+          <button type="button" class="nes-btn" onClick={disconnect}>Disconnect</button>
         </div>
         
         <div>
@@ -96,6 +95,7 @@ function dashboard() {
     <div>
       {connectors.map((connector) => (
         <button
+        type="button" class="nes-btn"
           //disabled={!connector.ready}
           key={connector.id}
           onClick={() => connect(connector)}

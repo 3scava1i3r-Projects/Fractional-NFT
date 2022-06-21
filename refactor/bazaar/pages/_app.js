@@ -1,4 +1,7 @@
 import '../styles/globals.css'
+import "nes.css/css/nes.min.css"
+
+
 import { WagmiConfig, createClient, defaultChains, configureChains } from 'wagmi'
 import { infuraProvider } from 'wagmi/providers/infura'
 
