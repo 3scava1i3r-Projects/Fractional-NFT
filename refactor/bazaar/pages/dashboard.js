@@ -31,7 +31,7 @@ function dashboard() {
       axios
       .post("https://api.thegraph.com/subgraphs/name/jmahhh/niftex-v2-custody", {
         query: `{
-          wallets(where:{owner:"${account.address}"})
+          wallets(where:{owner:"0x55590dcd461ce79eb2280cd1446932b46112afc9"})
           {
                                       id
                                       name
@@ -47,7 +47,7 @@ function dashboard() {
       .then((res) => {
         console.log(res)
         res.data.data.wallets.map((walletitem) => {
-          if (walletitem.owner === account.address && walletitem.nfts.length !== 0) {
+          if (walletitem.owner === "0x55590dcd461ce79eb2280cd1446932b46112afc9" && walletitem.nfts.length !== 0) {
             //console.log(walletitem);
             g.push(walletitem);
           }
@@ -78,11 +78,13 @@ function dashboard() {
           <button type="button" class="nes-btn" onClick={disconnect}>Disconnect</button>
         </div>
         
-        <div>
+        <div className="is-container">
           
           {dashboard.map((v,i) => (
+            <div >
+                <DashboardCard info={v}/>
+            </div>
             
-            <DashboardCard info={v}/>
           ))}
         </div>
 
