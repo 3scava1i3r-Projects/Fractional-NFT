@@ -1,131 +1,120 @@
-import Web3 from "web3";
-import Web3Modal from "web3modal";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import Portis from "@portis/web3";
-import {useState} from "react";
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useEnsAvatar,
+  useEnsName,
+} from 'wagmi'
+import { useState , useEffect} from "react"
 import axios from "axios"
-let g = new Array();
 
-
-const providerOptions = {
-    walletconnect: {
-      package: WalletConnectProvider, // required
-      options: {
-        infuraId: "d4c7101b7a7e45fd8adaaf71881b6be4", // required
-      },
-    },
-    portis: {
-      package: Portis, // required
-      options: {
-        id: "b7d059de-0fea-4fbf-a725-143562297c30", // required
-      },
-    },
-  }
-
-
-
-  
+import DashboardCard from "../components/DashboardCard"
 
 function dashboard() {
 
+  let g = new Array();
+  const [dashboard, setdashboard] = useState([]);
 
-    const [auth, setauth] = useState(false)
-    const [acc, setacc] = useState("")
-    const [dashboard, setdashboard] = useState([]);
-    const [isloading, setisloading] = useState(false)
 
-    const GetFractions = () => {
+  const { data: account } = useAccount()
+  const { data: ensAvatar } = useEnsAvatar({ addressOrName: account?.address })
+  const { data: ensName } = useEnsName({ address: account?.address })
+  const { connect, connectors, error, isConnecting, pendingConnector } =
+    useConnect()
+  const { disconnect } = useDisconnect()
 
-        try {
+  
+  
+  useEffect(() => {
 
-          axios
-          .post("https://api.thegraph.com/subgraphs/name/jmahhh/niftex-v2-custody", {
-            query: 
-            `{
-                wallets(where:{owner:"0x55590dcd461ce79eb2280cd1446932b46112afc9"})
-                {
-                                            id
-                                            name
-                                            symbol
-                                            owner
-                                            nfts{
-                                            id
-                                            }       
-                                    }
-                                
-                        }`,
-          })
-          .then((res) => {
-            
-            res.data.data.wallets.map((walletitem,i) => {
-              if (walletitem.nfts.length != 0) {
-                //console.log(walletitem);
-                g.push(walletitem);
-              }
-            });
-            setdashboard(g);
-            console.log(dashboard);
-            g = [];
-   
-          })
-          setisloading(true)
-          
-        } catch (e) {
-          console.log(e)
-        }
-        console.log(dashboard);
-        
-      }
-    
-
-    const logIn = async() => {
-        const web3Modal = new Web3Modal({
-            providerOptions, 
-            //displayNoInjectedProvider: true,
-            //disableInjectedProvider: true,
-          });
-          
-          const provider = await web3Modal.connect();
-          //console.log(provider)
-          const web3 = new Web3(provider);
-          
-          //const d = web3.currentProvider.selectedAddress
-          const accounts = await web3.eth.getAccounts();
-    
-          setacc(accounts[0])
-          setauth(true)
-          GetFractions()
-          
-      }
-    
-      const signout = () => {
-    
-        const web3Modal = new Web3Modal({
-          providerOptions, // required
-          //displayNoInjectedProvider: true,
-          //disableInjectedProvider: true,
+    if(account != null)
+    {
+      axios
+      .post("https://api.thegraph.com/subgraphs/name/jmahhh/niftex-v2-custody", {
+        query: `{
+          wallets(where:{owner:"${account.address}"})
+          {
+                                      id
+                                      name
+                                      symbol
+                                      owner
+                                      nfts{
+                                      id
+                                      }       
+                              }
+                          
+                  }`,
+      })
+      .then((res) => {
+        console.log(res)
+        res.data.data.wallets.map((walletitem) => {
+          if (walletitem.owner === account.address && walletitem.nfts.length !== 0) {
+            //console.log(walletitem);
+            g.push(walletitem);
+          }
         });
-        
-        setauth(false)
-        setacc("")
-        console.log(acc)
-    
-        web3Modal.clearCachedProvider();
-    
-        //console.log(auth)
-      }
+        setdashboard(g);
+        console.log(dashboard);
+        g = [];
+
+      })
+      .catch((e) => console.log(e));
+
+    }
+    console.log(dashboard)
+  
+  }, [account])
 
 
+  if (account) {
 
     return (
-        <>  
-            {!acc ? (<button onClick={logIn}>IN</button>): (<button onClick={signout}>Out</button>)}
+      <div>
+        <div>
+          <img src={ensAvatar} alt="ENS Avatar" />
+          <div>
+            {ensName ? `${ensName} (${account.address})` : account?.address}
+          </div>
+          <div>Connected to {account.connector.name}</div>
+          <button onClick={disconnect}>Disconnect</button>
+        </div>
+        
+        <div>
+          
+          {dashboard.map((v,i) => (
             
-            
-            {!acc ? (<h2>we have no {acc}</h2>) : (<h2>we have {acc}</h2>)}
+            <DashboardCard info={v}/>
+          ))}
+        </div>
 
-        </>
-    );
+      </div>
+    )
+  }
+
+  
+  return (
+    <div>
+      {connectors.map((connector) => (
+        <button
+          //disabled={!connector.ready}
+          key={connector.id}
+          onClick={() => connect(connector)}
+        >
+          {connector.name}
+          {!connector.ready && ' (unsupported)'}
+          {isConnecting &&
+            connector.id === pendingConnector?.id &&
+            ' (connecting)'}
+        </button>
+      ))}
+
+      {error && <div>{error.message}</div>}
+
+      <div> Wallet not attached! 🥸 </div>
+    </div>
+  )
+
+  
 }
 
 export default dashboard;
