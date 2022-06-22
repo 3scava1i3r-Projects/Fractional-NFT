@@ -1,5 +1,5 @@
 import { useState,useEffect } from "react";
-import { useAccount,useContract } from "wagmi"
+import { useAccount,useContract,useContractRead } from "wagmi"
 import { ethers, providers } from "ethers";
 
 import SWabi from "../abi/ShardedWallet.json"
@@ -8,23 +8,28 @@ import SWabi from "../abi/ShardedWallet.json"
 function DashboardCard(props) {
 
     const { data: account } = useAccount()
-    const [bal, setbal] = useState();
+    const [bal, setbal] = useState(null);
     //console.log(props.info)
-    
-    const SWcontract = useContract({
-        addressOrName: props.info.id,
-        contractInterface: SWabi,
-        
-    })
 
 
-    useEffect(async() => {
-        balance = await SWcontract.balanceOf("0x55590dcd461ce79eb2280cd1446932b46112afc9");
-        // console.log(balance.toString())
-        // setbal(balance.toString()/1000000000000000000);
+    const { data, isError, isLoading } = useContractRead(
+        {
+          addressOrName: props.info.id,
+          contractInterface: SWabi,
+        },
+        'balanceOf',
+        {
+            args: props.info.owner,
+          },
+      )
+
+      useEffect(() => {
+        //console.log(data)
+        setbal(data.toString()/1000000000000000000)
         
-          
-    }, [account.address])
+      }, [account])
+      
+
         
 
     return (
@@ -35,7 +40,7 @@ function DashboardCard(props) {
             <div>
                 {props.info.name}
             </div>
-                
+                {bal}
             <div>
             </div>
             {props.info.owner}
