@@ -4,6 +4,7 @@ import {
   useDisconnect,
   useEnsAvatar,
   useEnsName,
+  useContractRead
 } from 'wagmi'
 import { useState , useEffect} from "react"
 import axios from "axios"
@@ -49,6 +50,9 @@ function dashboard() {
         res.data.data.wallets.map((walletitem) => {
           if (walletitem.owner === "0x55590dcd461ce79eb2280cd1446932b46112afc9" && walletitem.nfts.length !== 0) {
             //console.log(walletitem);
+
+            
+            
             g.push(walletitem);
           }
         });
@@ -75,7 +79,7 @@ function dashboard() {
             {ensName ? `${ensName} (${account.address})` : account?.address}
           </div>
           <div>Connected to {account.connector.name}</div>
-          <button type="button" class="nes-btn" onClick={disconnect}>Disconnect</button>
+          <button type="button" className="nes-btn" onClick={disconnect}>Disconnect</button>
         </div>
         
         <div className="is-container">
